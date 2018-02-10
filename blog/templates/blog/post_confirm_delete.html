@@ -1,0 +1,14 @@
+{% extends 'blog/base.html' %}
+
+{% block breadcrumb %}{{ block.super }} > Admin page > Confirm delete{% endblock %}
+
+{% block content %}
+    <div class="form">
+        <h2>Are you sure you want to delete the "<b>{{ object.name }}</b>" task?</h2>
+        <form action="" method="post" novalidate>
+            {% csrf_token %}
+            <input type="submit" value="Yes">
+        </form>
+    </div>
+    
+{% endblock %}

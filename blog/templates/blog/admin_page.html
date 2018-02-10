@@ -1,0 +1,30 @@
+{% extends 'blog/base.html' %}
+
+{% block breadcrumb %}{{ block.super }} > Admin{% endblock %}
+
+{% block content %}
+
+    <div class="blog-table">
+        <h2><a href="#">&#9997 New Post</a></h2>
+        <table>
+            <tr>
+                <th>Title</th>
+                <th colspan="2">Actions</th>
+            </tr>
+            <tr>
+                <td>12 Gift ideas for Christmas</td>
+                <td><a href="#">&#9998 Edit</a></td>
+                <td><a href="#">&#128465 Delete</a></td>
+            </tr>
+            <tr>
+                <td>12 Gift ideas for Christmas</td>
+                <td><a href="#">&#9998 Edit</a></td>
+                <td><a href="#">&#128465 Delete</a></td>
+            </tr>
+        </table>
+                    
+    </div>
+
+    {% include 'blog/pagination_links.html' %}
+
+{% endblock %}

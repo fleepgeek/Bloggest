@@ -1,0 +1,33 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Bloggest{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+</head>
+<body>
+    
+    <nav>
+        <h2>&#x1f451 Bloggest</h2>
+        {% if user.is_authenticated %}
+            <p><a href="#">&#128274 Logout</a></p>
+        {% else %}
+            <p><a href="#">&#128275 Login</a></p>
+        {% endif %}
+    </nav>
+
+    <section class="content-wrapper">
+        <div class="breadcrumb">
+            <p>{% block breadcrumb %}<a href="#">Home</a>{% endblock %}</p>
+        </div>
+        
+        {% block content %}
+
+        {% endblock %}
+    </section>
+
+</body>
+</html>
