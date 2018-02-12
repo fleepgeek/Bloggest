@@ -6,7 +6,6 @@ from django.template.defaultfilters import slugify
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True)
     creator = models.ForeignKey(User)
 
     class Meta:
@@ -16,11 +15,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('post_by_category', args=[self.slug])
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Category, self).save(*args, **kwargs)
+        return reverse('post_by_category', args=[self.name])
 
 
 class Post(models.Model):
@@ -36,7 +31,7 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('post_detail', args=[self.id, self.slug])
+        return reverse('post_detail', args=[self.pk])
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
