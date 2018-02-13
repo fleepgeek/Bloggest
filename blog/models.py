@@ -20,7 +20,6 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, help_text="Slug will be automatically generated from the post's title")
     content = models.TextField()
     pub_date = models.DateTimeField(auto_now_add=True)
     view_count = models.PositiveIntegerField(default=0)
@@ -33,8 +32,5 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post_detail', args=[self.pk])
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        super(Post, self).save(*args, **kwargs)
 
 
