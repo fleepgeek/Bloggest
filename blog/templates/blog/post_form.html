@@ -5,20 +5,9 @@
 {% block content %}
 
     <div class="form">
-        <form method="" novalidate>
-            <p><label for="">Title</label> <input type="text"></p>
-
-            <p>
-                <label for="">Category</label>  
-                <select name="created_by" required="" id="id_created_by">
-                    <option value="" selected="">---------</option>
-                    <option value="1">entertainment</option>
-                    <option value="2">fashion</option>
-                </select>
-            </p>
-
-            <p><label for="">Content</label> <textarea name="" id="" cols="30" rows="10"></textarea></p>
-            
+        <form action="" method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
             <p><input type="submit" value="Submit"></p> 
         </form>
     </div>
