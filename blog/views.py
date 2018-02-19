@@ -3,7 +3,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
-from .models import Post
+from .models import Post, Comment
 
 class Home(ListView):
     model = Post
@@ -29,7 +29,6 @@ class PostDetail(DetailView):
         object.view_count += 1
         object.save()
         return object
-
     
 
 
