@@ -15,22 +15,29 @@
     </div>
 
     <div class="form">
-        <form method="" novalidate>
-            <p><label for="">Comment</label> <textarea name="" id="" cols="30" rows="10"></textarea></p>
-            
+        <form action="" method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
             <p><input type="submit" value="Submit"></p> 
         </form>
     </div>
 
 
     <div class="comments-list">
-        <div class="comment">
-            <img src="{% static 'blog/images/avatar.png' %}" alt="avatar">
-            <div class="info">
-                <p>John<span> . 3rd june 2017</span></p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis dolorem, provident itaque iste molestias minus mollitia dignissimos quidem quibusdam ea. Qui ratione commodi pariatur soluta voluptatibus minus sequi eum tempora ipsam beatae consequatur praesentium quia, odio recusandae reprehenderit. Non, iusto.</p>
-            </div>   
-        </div>
+        {% for cmt in comments %}
+            <div class="comment">
+                <img src="{% static 'blog/images/avatar.png' %}" alt="avatar">
+                <div class="info">
+                    <p>{{ cmt.by }}<span> . {{ cmt.created_on }}</span></p>
+                    <p>{{ cmt.content }}</p>
+                </div>   
+            </div>
+        {% empty %}
+            <div>
+                <h3>There are no comments yet.</h3>
+            </div>
+        {% endfor %}
+        
     </div>
 
 {% endblock %}
