@@ -33,4 +33,8 @@ class Post(models.Model):
         return reverse('post_detail', args=[self.pk])
 
 
-
+class Comment(models.Model):
+    content = models.TextField()
+    by = models.ForeignKey(User)
+    post = models.ForeignKey(Post)
+    created_on = models.DateTimeField(auto_now_add=True)
