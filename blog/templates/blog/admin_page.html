@@ -11,16 +11,14 @@
                 <th>Title</th>
                 <th colspan="2">Actions</th>
             </tr>
-            <tr>
-                <td>12 Gift ideas for Christmas</td>
-                <td><a href="#">&#9998 Edit</a></td>
-                <td><a href="#">&#128465 Delete</a></td>
-            </tr>
-            <tr>
-                <td>12 Gift ideas for Christmas</td>
-                <td><a href="#">&#9998 Edit</a></td>
-                <td><a href="#">&#128465 Delete</a></td>
-            </tr>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td><a href="{% url 'post_update' post.pk %}">&#9998 Edit</a></td>
+                    <td><a href="{% url 'post_delete' post.pk %}">&#128465 Delete</a></td>
+                </tr>
+            {% endfor %}
+            
         </table>
                     
     </div>

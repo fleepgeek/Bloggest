@@ -2,16 +2,19 @@
 
 {% block content %}
 
-    <div class="blog-item">
-        <h2><a href="#">12 Gift ideas for Christmas</a></h2>
-        <div class="info">
-            By <span><a href="#">Jason Bateman</a></span> | In <span><a href="#">Holidays</a></span> | On <span>8 January 2018</span> | &#x1f441 <span>325 Views</span> 
+    {% for post in posts %}
+        <div class="blog-item">
+            <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+            <div class="info">
+                By <span><a href="#">{{ post.author }}</a></span> | In <span><a href="#">{{ post.category }}</a></span> | On <span>{{ post.pub_date }}</span> | &#x1f441 <span>{{ post.view_count }} Views</span> 
+            </div>
+            <p>     {{ post.content|truncatewords:30 }}      </p>
         </div>
-        <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, et doloremque. Rem molestiae similique fugiat non, dolore labore accusantium officia tempora? Laborum optio itaque temporibus perferendis debitis. Vero, aperiam? Officia, dolor error nisi corporis harum....
-        </p>
-    </div>
-
+    {% empty %}
+        <div>
+            <h3>There are no posts yet.</h3>
+        </div>
+    {% endfor %}
 
     {% include 'blog/pagination_links.html' %}
 

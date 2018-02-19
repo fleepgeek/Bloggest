@@ -21,7 +21,7 @@
 
     <section class="content-wrapper">
         <div class="breadcrumb">
-            <p>{% block breadcrumb %}<a href="#">Home</a>{% endblock %}</p>
+            <p>{% block breadcrumb %}<a href="{% url 'home' %}">Home</a>{% endblock %}</p>
         </div>
         
         {% block content %}
