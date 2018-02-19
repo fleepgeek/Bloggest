@@ -30,6 +30,8 @@ class PostDetail(DetailView):
         object.save()
         return object
 
+    
+
 
 class PostCreate(CreateView):
     model = Post
