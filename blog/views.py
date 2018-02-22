@@ -2,7 +2,8 @@ from django.shortcuts import render, reverse
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from .models import Post, Comment
 from .forms import CommentForm
@@ -15,6 +16,7 @@ class Home(ListView):
     paginate_by = 3
 
 
+@method_decorator(login_required, name='dispatch')
 class Dashboard(View):
     def get(self, request, *args, **kwargs):
         view = Home.as_view(
@@ -39,6 +41,7 @@ class PostDisplay(DetailView):
         return context
 
 
+@method_decorator(login_required, name='dispatch')
 class PostComment(FormView):
     form_class = CommentForm
     template_name = 'blog/post_detail.html'
@@ -64,6 +67,7 @@ class PostDetail(View):
         return view(request, *args, **kwargs)
 
 
+@method_decorator(login_required, name='dispatch')
 class PostCreate(CreateView):
     model = Post
     fields = ('title', 'category', 'content')
@@ -74,11 +78,13 @@ class PostCreate(CreateView):
         return super(PostCreate, self).form_valid(form)
 
 
+@method_decorator(login_required, name='dispatch')
 class PostUpdate(UpdateView):
     model = Post
     fields = ('title', 'category', 'content')
 
 
+@method_decorator(login_required, name='dispatch')
 class PostDelete(DeleteView):
     model = Post
     success_url = reverse_lazy('dashboard')

@@ -13,9 +13,9 @@
     <nav>
         <h2>&#x1f451 Bloggest</h2>
         {% if user.is_authenticated %}
-            <p><a href="#">&#128274 Logout</a></p>
+            <p><a href="{% url 'logout' %}">&#128274 Logout</a></p>
         {% else %}
-            <p><a href="#">&#128275 Login</a></p>
+            <p><a href="{% url 'login' %}">&#128275 Login</a></p>
         {% endif %}
     </nav>
 
