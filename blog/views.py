@@ -3,6 +3,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
 
+
 from .models import Post, Comment
 from .forms import CommentForm
 
