@@ -1,11 +1,11 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, get_object_or_404
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from .models import Post, Comment
+from .models import Post, Comment, Category
 from .forms import CommentForm
 
 class Home(ListView):
@@ -88,3 +88,17 @@ class PostUpdate(UpdateView):
 class PostDelete(DeleteView):
     model = Post
     success_url = reverse_lazy('dashboard')
+
+
+class PostCategory(ListView):
+    model = Post
+    template_name = 'blog/post_category.html'
+
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
+        return Post.objects.filter(category=self.category)
+
+    def get_context_data(self, **kwargs):
+        context = super(PostCategory, self).get_context_data(**kwargs)
+        context['category'] = self.category
+        return context
