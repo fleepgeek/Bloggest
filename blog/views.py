@@ -44,7 +44,6 @@ class PostDisplay(DetailView):
 @method_decorator(login_required, name='dispatch')
 class PostComment(FormView):
     form_class = CommentForm
-    template_name = 'blog/post_detail.html'
 
     def form_valid(self, form):
         form.instance.by = self.request.user
