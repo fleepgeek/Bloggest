@@ -1,6 +1,8 @@
 from django.shortcuts import render, reverse, get_object_or_404
-from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
+from django.views.generic.base import View
+from django.views.generic.detail import DetailView, SingleObjectMixin
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -8,12 +10,23 @@ from django.utils.decorators import method_decorator
 from .models import Post, Comment, Category
 from .forms import CommentForm
 
-class Home(ListView):
+
+class PageContextMixin(object):
+    page_title = None
+
+    def get_context_data(self, **kwargs):
+        context = super(PageContextMixin, self).get_context_data(**kwargs)
+        context['page_title'] = self.page_title
+        return context
+
+
+class Home(PageContextMixin, ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
     ordering =  '-pub_date'
     paginate_by = 3
+    page_title = 'Home'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -26,13 +39,29 @@ class Dashboard(View):
         return view(request, *args, **kwargs)
 
 
-class PostDisplay(DetailView):
+# class PostDisplay(DetailView):
+#     model = Post
+#     def get_object(self):
+#         object = super(PostDisplay, self).get_object()
+#         object.view_count += 1
+#         object.save()
+#         return object
+    
+#     def get_context_data(self, **kwargs):
+#         context = super(PostDisplay, self).get_context_data(**kwargs)
+#         context['comments'] = Comment.objects.filter(post=self.get_object())
+#         context['form'] = CommentForm
+#         return context
+
+class PostDisplay(PageContextMixin, SingleObjectMixin, View):
     model = Post
-    def get_object(self):
-        object = super(PostDisplay, self).get_object()
-        object.view_count += 1
-        object.save()
-        return object
+    page_title = 'Detail'
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.view_count += 1
+        self.object.save()
+        post = self.get_context_data(object=self.object)
+        return render(request, 'blog/post_detail.html', post)
     
     def get_context_data(self, **kwargs):
         context = super(PostDisplay, self).get_context_data(**kwargs)

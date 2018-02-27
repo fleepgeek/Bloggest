@@ -2,6 +2,10 @@
 
 {% load static %}
 
+{% block title %}
+    {{ page_title }} - {{ block.super }}
+{% endblock title %}
+
 {% block breadcrumb %}{{ block.super }} > 12 Gift ideas for Christmas{% endblock %}
 
 {% block content %}
