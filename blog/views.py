@@ -24,7 +24,7 @@ class Home(PageContextMixin, ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
-    ordering =  '-pub_date'
+    ordering = '-pub_date'
     paginate_by = 3
     page_title = 'Home'
 
@@ -33,36 +33,23 @@ class Home(PageContextMixin, ListView):
 class Dashboard(View):
     def get(self, request, *args, **kwargs):
         view = Home.as_view(
-            template_name = 'blog/admin_page.html',
-            paginate_by = 4
+            template_name='blog/admin_page.html',
+            paginate_by=4
         )
         return view(request, *args, **kwargs)
 
 
-# class PostDisplay(DetailView):
-#     model = Post
-#     def get_object(self):
-#         object = super(PostDisplay, self).get_object()
-#         object.view_count += 1
-#         object.save()
-#         return object
-    
-#     def get_context_data(self, **kwargs):
-#         context = super(PostDisplay, self).get_context_data(**kwargs)
-#         context['comments'] = Comment.objects.filter(post=self.get_object())
-#         context['form'] = CommentForm
-#         return context
-
 class PostDisplay(PageContextMixin, SingleObjectMixin, View):
     model = Post
     page_title = 'Detail'
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.view_count += 1
         self.object.save()
         post = self.get_context_data(object=self.object)
         return render(request, 'blog/post_detail.html', post)
-    
+
     def get_context_data(self, **kwargs):
         context = super(PostDisplay, self).get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(post=self.get_object())
