@@ -6,6 +6,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.http import JsonResponse
+from django.core import serializers
 
 from .models import Post, Comment, Category
 from .forms import CommentForm
@@ -61,15 +63,22 @@ class PostDisplay(PageContextMixin, SingleObjectMixin, View):
 class PostComment(FormView):
     form_class = CommentForm
 
-    def form_valid(self, form):
-        form.instance.by = self.request.user
-        post = Post.objects.get(pk=self.kwargs['pk'])
-        form.instance.post = post
-        form.save()
-        return super(PostComment, self).form_valid(form)
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            return JsonResponse({"error": form.errors}, status=400)
+        else:
+            return JsonResponse({"error": "Invalid form and request"}, status=400)
 
-    def get_success_url(self):
-        return reverse('post_detail', kwargs={'pk': self.kwargs['pk']})
+    def form_valid(self, form):
+        if self.request.is_ajax():
+            form.instance.by = self.request.user
+            post = Post.objects.get(pk=self.kwargs['pk'])
+            form.instance.post = post
+            comment_instance = form.save()
+            ser_comment = serializers.serialize("json", [comment_instance, ])
+            return JsonResponse({"new_comment": ser_comment}, status=200)
+        else:
+            return JsonResponse({"error": "Error occured during request"}, status=400)
 
 
 class PostDetail(View):

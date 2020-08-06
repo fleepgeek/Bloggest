@@ -19,7 +19,7 @@
     </div>
 
     <div class="form">
-        <form action="" method="post" novalidate>
+        <form id="comment-form" action="" method="post" novalidate>
             {% csrf_token %}
             {{ form.as_p }}
             <p><input type="submit" value="Submit"></p> 
@@ -37,7 +37,7 @@
                 </div>   
             </div>
         {% empty %}
-            <div>
+            <div class="no-comment">
                 <h3>There are no comments yet.</h3>
             </div>
         {% endfor %}
@@ -45,3 +45,57 @@
     </div>
 
 {% endblock %}
+
+{% block javascript %}
+<script>
+  function createComment(formData) {
+    console.log("Posting Comment");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    fetch("{% url 'post_detail' post.pk %}", {
+      method: "Post",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: formData
+    }).then(function(response) {
+      return response.json();
+    }).then(function(data) {
+      commentForm.reset();
+      console.log(data);
+      let instance = JSON.parse(data["new_comment"]);
+      let fields = instance[0]["fields"];
+      let commentsList = document.querySelector(".comments-list");
+      let noCommentFlag= document.querySelector(".no-comment");
+      if(noCommentFlag) {
+        commentsList.removeChild(noCommentFlag);
+      }
+      commentsList.innerHTML += `
+        <div class="comment">
+            <img src="{% static 'blog/images/avatar.png' %}" alt="avatar">
+            <div class="info">
+                <p>{{ user }}<span> . Just Now</span></p>
+                <p>${fields['content'] || " "}</p>
+            </div>   
+        </div>
+      `;
+    }).catch((error) => {
+      console.error("Error", error);
+    })
+  }   
+
+  function submitComment(e) {
+    e.preventDefault();
+    let content = document.querySelector("#id_content").value;
+    if(content){
+      let formData = new FormData(commentForm);
+      createComment(formData);
+    }else {
+      console.log("You cannot submit an empty form")
+    }
+  }
+
+  let commentForm = document.getElementById("comment-form");
+  commentForm.addEventListener("submit", submitComment);
+</script>
+{% endblock javascript %}
