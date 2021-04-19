@@ -64,13 +64,13 @@ class PostComment(FormView):
     form_class = CommentForm
 
     def form_invalid(self, form):
-        if self.request.is_ajax():
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({"error": form.errors}, status=400)
         else:
             return JsonResponse({"error": "Invalid form and request"}, status=400)
 
     def form_valid(self, form):
-        if self.request.is_ajax():
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             form.instance.by = self.request.user
             post = Post.objects.get(pk=self.kwargs['pk'])
             form.instance.post = post
